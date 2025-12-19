@@ -6,7 +6,8 @@
 <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
 </head>
 <body>
-<h2>ログイン処理中...</h2>
+<h2 id="msg">処理中...</h2>
+
 <script>
 (async () => {
   await liff.init({ liffId: "2008678459-lgajbp6q" });
@@ -19,10 +20,18 @@
   const profile = await liff.getProfile();
   const uid = profile.userId;
 
-  document.body.innerHTML =
-    "<h3>LINEユーザーIDを取得しました</h3>" +
-    "<p><b>" + uid + "</b></p>" +
-    "<p>この画面は閉じてOKです。</p>";
+  const params = new URLSearchParams(location.search);
+  const isStaff = params.get("staff") === "1";
+
+  if (isStaff) {
+    // スタッフ用（ID表示）
+    document.getElementById("msg").innerHTML =
+      "【スタッフ用】<br>LINE userId:<br><b>" + uid + "</b>";
+  } else {
+    // 飼い主用（非表示）
+    document.getElementById("msg").innerHTML =
+      "連携が完了しました。<br>受付でこの画面をお見せください。";
+  }
 })();
 </script>
 </body>
